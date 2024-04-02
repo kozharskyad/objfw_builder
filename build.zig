@@ -29,7 +29,11 @@ const default_compiler_flags = &.{
   "-fobjc-arc-exceptions"
 };
 
-fn populateDependencies(self: *const Self, artifact: *Build.Step.Compile, without_system_libs: bool) void {
+fn populateDependencies(
+  self: *const Self,
+  artifact: *Build.Step.Compile,
+  without_system_libs: bool
+) void {
   artifact.force_load_objc = true;
 
   artifact.addIncludePath(self.objfw_include_path);
@@ -90,7 +94,10 @@ pub fn addExecutable(self: *const Self, name: []const u8) *Build.Step.Compile {
   return executable;
 }
 
-pub fn addStaticLibrary(self: *const Self, name: []const u8) *Build.Step.Compile {
+pub fn addStaticLibrary(
+  self: *const Self,
+  name: []const u8
+) *Build.Step.Compile {
   const library = self.base.addStaticLibrary(.{
     .name = name,
     .target = self.target,
