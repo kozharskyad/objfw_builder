@@ -30,6 +30,8 @@ const default_compiler_flags = &.{
 };
 
 fn populateDependencies(self: *const Self, artifact: *Build.Step.Compile, without_system_libs: bool) void {
+  artifact.force_load_objc = true;
+
   artifact.addIncludePath(self.objfw_include_path);
   artifact.addIncludePath(self.include_path);
   artifact.addLibraryPath(self.objfw_library_path);
