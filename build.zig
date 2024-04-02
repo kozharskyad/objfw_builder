@@ -110,18 +110,20 @@ pub fn addStaticLibrary(
 }
 
 pub fn addObjCSourceFiles(
-  self: *const Self,
+  _: *const Self,
   artifact: *Build.Step.Compile,
   root_path: []const u8,
   files: []const []const u8
 ) void {
-  _ = self;
-
   artifact.addCSourceFiles(.{
     .root = .{ .path = root_path },
     .files = files,
     .flags = default_compiler_flags
   });
+}
+
+pub fn dependency(self: *const Self, name: []const u8) *Build.Dependency {
+  return self.base.dependency(name, .{});
 }
 
 pub fn installArtifact(self: *const Self, artifact: *Build.Step.Compile) void {
