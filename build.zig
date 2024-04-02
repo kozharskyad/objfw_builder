@@ -45,15 +45,11 @@ fn populateDependencies(self: *const Self, artifact: *Build.Step.Compile, withou
   }
 }
 
-const ObjFWBuilderError = error {
-  RootNotSet
-};
-
-pub fn init(builder: *Build) ObjFWBuilderError!Self {
+pub fn init(builder: *Build) Self {
   const root = builder.option(
     []const u8, "objfw-root",
     "ObjFW root path"
-  ) orelse return ObjFWBuilderError.RootNotSet;
+  ) orelse @panic("ObjFW root not set (-Dobjfw-root=/path/to/objfw)");
 
   const include_path: Build.LazyPath = .{
     .path = builder.pathFromRoot("src/include")
