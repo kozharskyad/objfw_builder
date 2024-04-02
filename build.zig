@@ -66,8 +66,12 @@ pub fn init(builder: *Build) Self {
   return Self {
     .base = builder,
     .root = root,
-    .objfw_include_path = .{ .path = builder.pathJoin(&.{ root, "include" }) },
-    .objfw_library_path = .{ .path = builder.pathJoin(&.{ root, "lib" }) },
+    .objfw_include_path = .{
+      .path = builder.pathJoin(&.{ root, "include" })
+    },
+    .objfw_library_path = .{
+      .path = builder.pathJoin(&.{ root, "lib" })
+    },
     .include_path = include_path,
     .target = builder.standardTargetOptions(.{}),
     .optimize = builder.standardOptimizeOption(.{}),
