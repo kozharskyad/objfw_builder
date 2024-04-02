@@ -46,18 +46,13 @@ fn populateDependencies(self: *const Self, artifact: *Build.Step.Compile, withou
 }
 
 pub fn init(builder: *Build) Self {
-  const env = std.process.getEnvMap(builder.allocator)
+  var env = std.process.getEnvMap(builder.allocator)
     catch @panic("Unable to read environment variables");
 
   defer env.deinit();
 
-  const root = env.get("OBJFW_ROOT")
-    orelse @panic("ObjFW root not set (OBJFW_ROOT=/path/to/objfw zig build)");
-  // const root = builder.option(
-  //   []const u8,
-  //   "objfw-root",
-  //   "ObjFW root path"
-  // ) orelse @panic("ObjFW root not set (-Dobjfw-root=/path/to/objfw)");
+  const root = env.get("OBJFW_ROOT") orelse
+    @panic("ObjFW root not set (OBJFW_ROOT=/path/to/objfw zig build)");
 
   const include_path: Build.LazyPath = .{
     .path = builder.pathFromRoot("src/include")
