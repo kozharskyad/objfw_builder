@@ -1,5 +1,5 @@
 .{
   .name = "objfw_builder",
   .version = "1.0.0",
-  .paths = .{ "" },
+  .paths = .{ "build.zig" },
 }

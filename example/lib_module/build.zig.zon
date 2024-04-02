@@ -1,0 +1,11 @@
+.{
+  .name = "lib_module",
+  .version = "1.0.0",
+  .paths = .{ "" },
+  .dependencies = .{
+    .objfw_builder = .{
+      .url = "https://github.com/kozharskyad/objfw_builder/archive/refs/heads/main.tar.gz",
+      .hash = "122030243fba33505da29b960f0e4823db5e2ba5ba92596bf95c810eac21177fc2ba",
+    },
+  },
+}
