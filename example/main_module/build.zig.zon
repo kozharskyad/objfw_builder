@@ -7,5 +7,7 @@
       .url = "https://github.com/kozharskyad/objfw_builder/archive/refs/heads/main.tar.gz",
       .hash = "122030243fba33505da29b960f0e4823db5e2ba5ba92596bf95c810eac21177fc2ba",
     },
+    .lib_module = .{ .path = "../lib_module" },
+    .cat_module = .{ .path = "../cat_module" },
   },
 }
