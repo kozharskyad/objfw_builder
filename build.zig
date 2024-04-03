@@ -108,6 +108,8 @@ pub fn init(builder: *Build) Self {
   const root = detect_objfw_root(builder) orelse
     @panic("ObjFW root not set (OBJFW_ROOT=/path/to/objfw zig build)");
 
+  std.log.info("Detected ObjFW root directory: '{s}'", .{ root });
+
   const include_path: Build.LazyPath = .{
     .path =
       builder.pathFromRoot(builder.pathJoin(&.{ "src", "include" }))
