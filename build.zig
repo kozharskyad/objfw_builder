@@ -49,17 +49,68 @@ fn populateDependencies(
   }
 }
 
+fn detect_objfw_root(b: *Build) ?[]const u8 {
+  const cwd = std.fs.cwd();
+
+  var env = std.process.getEnvMap(b.allocator)
+    catch @panic("Unable to read environment variables");
+
+  defer env.deinit();
+
+  if (env.get("OBJFW_ROOT")) |objfw_path| {
+    if (cwd.statFile(objfw_path)) |_| {
+      return b.dupe(objfw_path);
+    } else |_| {}
+  }
+
+  if (b.findProgram(&.{ "objfw-config" }, &.{})) |script_path| {
+    const file = std.fs.openFileAbsolute(
+      script_path,
+      .{}
+    ) catch @panic("Cannot open objfw-config script");
+
+    defer file.close();
+
+    const file_reader = file.reader();
+    var prefix_line: ?[]const u8 = null;
+
+    while (file_reader.readUntilDelimiterAlloc(b.allocator, '\n', 256)) |line| {
+      if (std.mem.startsWith(u8, line, "prefix=\"")) {
+        prefix_line = line;
+        break;
+      }
+    } else |_| {}
+
+    if (prefix_line) |l| {
+      var it = std.mem.split(u8, l, "\"");
+
+      if (it.next()) |var_name| {
+        if (std.mem.eql(u8, var_name, "prefix=")) {
+          if (it.next()) |objfw_path| {
+            if (cwd.statFile(objfw_path)) |_| {
+              return b.dupe(objfw_path);
+            } else |_| {}
+          }
+        }
+      }
+    }
+  } else |_| {}
+
+  return null;
+}
+
 pub fn init(builder: *Build) Self {
   var env = std.process.getEnvMap(builder.allocator)
     catch @panic("Unable to read environment variables");
 
   defer env.deinit();
 
-  const root = env.get("OBJFW_ROOT") orelse
+  const root = detect_objfw_root(builder) orelse
     @panic("ObjFW root not set (OBJFW_ROOT=/path/to/objfw zig build)");
 
   const include_path: Build.LazyPath = .{
-    .path = builder.pathFromRoot("src/include")
+    .path =
+      builder.pathFromRoot(builder.pathJoin(&.{ "src", "include" }))
   };
 
   _ = builder.addModule(
