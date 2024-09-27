@@ -5,7 +5,7 @@
   .dependencies = .{
     .objfw_builder = .{
       .url = "https://github.com/kozharskyad/objfw_builder/archive/refs/heads/main.tar.gz",
-      .hash = "1220cf28875962552605f811d074d60a96e28ddb9e86bde6afe821358a81bb5b755d",
+      .hash = "1220c3b5eef13dc899c641de1f5f190a1b669979d663cb2d86cd687a8097dfc81710",
     },
   },
 }

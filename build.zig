@@ -109,8 +109,10 @@ pub fn init(builder: *Build) Self {
     @panic("ObjFW root not set (OBJFW_ROOT=/path/to/objfw zig build)");
 
   const include_path: Build.LazyPath = .{
-    .path =
-      builder.pathFromRoot(builder.pathJoin(&.{ "src", "include" }))
+    .src_path = .{
+      .owner = builder,
+      .sub_path = builder.pathFromRoot(builder.pathJoin(&.{ "src", "include" }))
+    }
   };
 
   _ = builder.addModule(
@@ -122,10 +124,16 @@ pub fn init(builder: *Build) Self {
     .base = builder,
     .root = root,
     .objfw_include_path = .{
-      .path = builder.pathJoin(&.{ root, "include" })
+      .src_path = .{
+        .owner = builder,
+        .sub_path = builder.pathJoin(&.{ root, "include" })
+      }
     },
     .objfw_library_path = .{
-      .path = builder.pathJoin(&.{ root, "lib" })
+      .src_path = .{
+        .owner = builder,
+        .sub_path = builder.pathJoin(&.{ root, "lib" }),
+      }
     },
     .include_path = include_path,
     .target = builder.standardTargetOptions(.{}),
@@ -161,13 +169,18 @@ pub fn addStaticLibrary(
 }
 
 pub fn addObjCSourceFiles(
-  _: *const Self,
+  self: *const Self,
   artifact: *Build.Step.Compile,
   root_path: []const u8,
   files: []const []const u8
 ) void {
   artifact.addCSourceFiles(.{
-    .root = .{ .path = root_path },
+    .root = .{
+      .src_path = .{
+        .owner = self.base,
+        .sub_path = root_path,
+      }
+    },
     .files = files,
     .flags = default_compiler_flags
   });
